@@ -2,433 +2,180 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Трансляция матча Реал Мадрид — Манчестер Сити</title>
+    <title>Футбольные трансляции</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
             font-family: Arial, sans-serif;
             background: #050814;
             color: #fff;
-        }
-
-        a { text-decoration: none; }
-
-        .top-bar {
-            width: 100%;
-            background: linear-gradient(90deg, #111, #1b1b1b);
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 2px solid #f9b52b;
-        }
-        .top-bar-left {
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            gap: 4px;
-        }
-        .top-bar-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #f9b52b;
-        }
-        .top-bar-link {
-            font-size: 14px;
-            color: #ddd;
-        }
-        .melbet-btn {
-            background: #f9b52b;
-            color: #111;
-            padding: 10px 18px;
-            border-radius: 4px;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 13px;
         }
 
         .page-wrapper {
-            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
         }
 
-        .intro-text {
-            max-width: 900px;
-            margin: 0 auto 20px auto;
-            font-size: 16px;
-            line-height: 1.5;
-            color: #e0e0e0;
-        }
-
-        .support-top-btn-wrapper {
+        .page-title {
             text-align: center;
+            font-size: 24px;
+            font-weight: 700;
             margin-bottom: 20px;
         }
-        .support-top-btn {
-            display: inline-block;
-            background: linear-gradient(90deg, #ff7a00, #ffcc00);
-            color: #111;
-            padding: 14px 40px;
-            border-radius: 999px;
-            font-size: 18px;
-            font-weight: 800;
-            text-transform: uppercase;
-            box-shadow: 0 0 18px rgba(255, 180, 0, 0.6);
-        }
 
-        .main-block {
-            display: flex;
-            justify-content: center;
-            align-items: stretch;
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 20px;
         }
 
-        .video-container {
-            position: relative;
-            flex: 1 1 auto;
-            max-width: 1200px;
-            border-radius: 10px;
+        .match-card {
+            background: linear-gradient(135deg, #111622, #050814);
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
-            border: 2px solid #222;
-        }
-
-        .video-wrapper {
-            position: relative;
-            width: 100%;
-            padding-top: 56.25%; /* 16:9 */
-        }
-
-        .video-wrapper iframe {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
-            z-index: 1;
-        }
-
-        /* Чёрная плашка в правом нижнем углу поверх ифрейма, блокирует клики по fullscreen */
-        .video-hide-fs-btn {
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            width: 50px;
-            height: 32px;
-            background: #000;
-            z-index: 5;
-        }
-
-        /* Плашка "Поддержать автора" — сделана шире */
-        .video-support-qr {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 10;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 8px;
-            padding: 8px 10px;
+            border: 1px solid #262b3a;
+            box-shadow: 0 0 20px rgba(0,0,0,0.6);
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            width: 260px; /* шире в обычном режиме */
         }
 
-        .video-support-qr-title {
-            font-size: 11px;
-            text-transform: uppercase;
-            font-weight: 700;
-            color: #ffde59;
-            text-align: center;
-        }
-
-        .video-support-qr-img {
-            width: 80px;
-            height: 80px;
-            background: #fff;
-            border-radius: 6px;
-            padding: 4px;
-        }
-
-        .video-support-qr-img img {
+        .match-img-wrapper {
             width: 100%;
-            height: 100%;
-            object-fit: contain;
+            overflow: hidden;
         }
 
-        .video-support-qr-link {
-            font-size: 11px;
-            color: #ffcc00;
-            text-decoration: underline;
+        .match-img-wrapper img {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
         }
 
-        .video-fs-btn {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 10;
-            background: rgba(0, 0, 0, 0.7);
-            color: #fff;
-            border-radius: 6px;
-            padding: 6px 10px;
-            font-size: 11px;
-            cursor: pointer;
-            border: 1px solid #666;
+        .match-card:hover .match-img-wrapper img {
+            transform: scale(1.05);
         }
 
-        .video-fs-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .side-panel {
-            width: 220px;
-            min-width: 200px;
-            background: radial-gradient(circle at top, #262626, #111);
-            border-radius: 10px;
-            padding: 16px;
-            border: 2px solid #ffb300;
-            box-shadow: 0 0 18px rgba(255, 179, 0, 0.4);
+        .match-content {
+            padding: 16px 16px 18px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 12px;
-            flex-shrink: 0;
+            gap: 8px;
+            flex: 1;
         }
-        .side-title {
-            text-transform: uppercase;
-            font-size: 16px;
-            font-weight: 800;
-            text-align: center;
-            color: #ffde59;
-        }
-        .side-subtitle {
-            font-size: 12px;
-            text-align: center;
-            color: #ccc;
-        }
-        .qr-box {
-            width: 6cm;
-            height: 6cm;
-            max-width: 210px;
-            max-height: 210px;
-            background: #fff;
-            padding: 6px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .qr-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        .side-btn {
-            display: inline-block;
-            margin-top: 4px;
-            background: linear-gradient(90deg, #ff7a00, #ffcc00);
-            color: #111;
-            padding: 8px 16px;
-            border-radius: 999px;
-            font-weight: 700;
+
+        .match-league {
             font-size: 13px;
             text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #ffde59;
         }
 
-        @media (max-width: 900px) {
-            .main-block {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .side-panel {
-                width: 100%;
-                max-width: 360px;
-                margin: 0 auto;
-            }
+        .match-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .match-time {
+            font-size: 14px;
+            color: #b0b3c0;
+        }
+
+        .match-actions {
+            margin-top: 10px;
+        }
+
+        .watch-btn {
+            display: inline-block;
+            padding: 10px 22px;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(90deg, #ff7a00, #ffcc00);
+            color: #111;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            box-shadow: 0 0 16px rgba(255,180,0,0.5);
+        }
+
+        .watch-btn:hover {
+            filter: brightness(1.05);
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 13px;
+            color: #888;
+            margin-top: 24px;
         }
 
         @media (max-width: 480px) {
-            .top-bar {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
+            .page-title {
+                font-size: 20px;
             }
-            .page-wrapper {
-                padding: 12px;
-            }
-            .support-top-btn {
-                width: 100%;
-                max-width: 320px;
-                font-size: 16px;
-            }
-        }
-
-        /* Полноэкранный режим контейнера */
-
-        .video-container:fullscreen {
-            width: 100%;
-            height: 100%;
-            max-width: none;
-            border-radius: 0;
-            border: none;
-        }
-
-        .video-container:fullscreen .video-wrapper {
-            width: 100%;
-            height: 100%;
-            padding-top: 0;
-        }
-
-        .video-container:fullscreen .video-wrapper iframe {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .video-container:fullscreen .video-support-qr {
-            top: 20px;
-            right: 20px;
-            padding: 12px 14px;
-            width: 320px; /* шире в полноэкранном режиме */
-        }
-
-        .video-container:fullscreen .video-support-qr-img {
-            width: 110px;
-            height: 110px;
-        }
-
-        .video-container:fullscreen .video-support-qr-title {
-            font-size: 13px;
-        }
-
-        .video-container:fullscreen .video-support-qr-link {
-            font-size: 12px;
-        }
-
-        .video-container:fullscreen .video-fs-btn {
-            top: 20px;
-            left: 20px;
-            font-size: 12px;
-            padding: 8px 12px;
-        }
-
-        /* Меньшая плашка в полноэкранном режиме, тоже блокирует клики */
-        .video-container:fullscreen .video-hide-fs-btn {
-            width: 50px;
-            height: 32px;
-            right: 0;
-            bottom: 0;
         }
     </style>
 </head>
 <body>
-<div class="top-bar">
-    <div class="top-bar-left">
-        <div class="top-bar-title">Melbet</div>
-        <a href="https://clck.ru/3Mo7a2" class="top-bar-link" target="_blank" rel="noopener noreferrer">
-            Лучшая линия на матч
-        </a>
-    </div>
-    <a href="https://clck.ru/3Mo7a2" class="melbet-btn" target="_blank" rel="noopener noreferrer">
-        Перейти
-    </a>
-</div>
-
 <div class="page-wrapper">
+    <div class="page-title">Выбери матч и смотри трансляцию</div>
 
-    <div class="intro-text">
-        Сегодня вас ждёт трансляция одного из самых ожидаемых футбольных противостояний — матча «Реал Мадрид» против «Манчестер Сити» в рамках европейского клубного турнира. 
-        Следите за игрой в прямом эфире, делайте ставки и поддерживайте любимую команду, не отвлекаясь от просмотра.
-    </div>
-
-    <div class="support-top-btn-wrapper">
-        <a href="https://www.donationalerts.com/r/gorra" class="support-top-btn" target="_blank" rel="noopener noreferrer">
-            Поддержать автора
-        </a>
-    </div>
-
-    <div class="main-block">
-        <div class="video-container">
-            <button class="video-fs-btn" type="button">
-                На весь экран
-            </button>
-
-            <div class="video-wrapper">
-                <iframe src="https://playball10.com/p2p-reserv/10tka9.php"
-                        allowfullscreen
-                        referrerpolicy="no-referrer">
-                </iframe>
-
-                <!-- Чёрная плашка, закрывающая иконку fullscreen и блокирующая клик -->
-                <div class="video-hide-fs-btn"></div>
-
-                <!-- Растянутая по ширине плашка "Поддержать автора" -->
-                <div class="video-support-qr">
-                    <div class="video-support-qr-title">Поддержать автора</div>
-                    <div class="video-support-qr-img">
-                        <img src="https://image2url.com/images/1765383032320-a1182741-b7e6-4da9-91c4-2e78ad065e8c.png" alt="QR код">
-                    </div>
-                    <a href="https://www.donationalerts.com/r/gorra" class="video-support-qr-link" target="_blank" rel="noopener noreferrer">
-                        Открыть ссылку
+    <div class="cards-grid">
+        <!-- Карточка: Реал Мадрид — Манчестер Сити -->
+        <div class="match-card">
+            <div class="match-img-wrapper">
+                <img src="https://avatars.mds.yandex.net/i?id=2a0000019afe80620e060d5b0e65f6f3df5b-1324586-fast-images&n=13"
+                     alt="Реал Мадрид — Манчестер Сити">
+            </div>
+            <div class="match-content">
+                <div class="match-league">Европейский клубный турнир</div>
+                <div class="match-title">Реал Мадрид — Манчестер Сити</div>
+                <div class="match-time">Прямая трансляция онлайн</div>
+                <div class="match-actions">
+                    <a class="watch-btn"
+                       href="https://plutosmoney2-boop.github.io/gb.github.io/"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        Смотреть трансляцию
                     </a>
                 </div>
             </div>
         </div>
 
-        <div class="side-panel">
-            <div class="side-title">Поддержать автора</div>
-            <div class="side-subtitle">Отсканируй QR, чтобы поддержать</div>
-            <div class="qr-box">
-                <img src="https://image2url.com/images/1765383032320-a1182741-b7e6-4da9-91c4-2e78ad065e8c.png" alt="QR код">
+        <!-- Карточка: Атлетик Б — ПСЖ -->
+        <div class="match-card">
+            <div class="match-img-wrapper">
+                <img src="https://avatars.mds.yandex.net/i?id=2a0000019afe80620e060d5b0e65f6f3df5b-1324586-fast-images&n=13"
+                     alt="Атлетик Б — ПСЖ">
             </div>
-            <a href="https://www.donationalerts.com/r/gorra" class="side-btn" target="_blank" rel="noopener noreferrer">
-                Поддержать автора
-            </a>
+            <div class="match-content">
+                <div class="match-league">Европейский клубный турнир</div>
+                <div class="match-title">Атлетик Б — ПСЖ</div>
+                <div class="match-time">Прямая трансляция онлайн</div>
+                <div class="match-actions">
+                    <a class="watch-btn"
+                       href="https://plutosmoney2-boop.github.io/gb2/"
+                       target="_blank"
+                       rel="noopener noreferrer">
+                        Смотреть трансляцию
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
+
+    <div class="footer-note">
+        Нажми на кнопку «Смотреть трансляцию», чтобы открыть матч в новой вкладке.
+    </div>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const container = document.querySelector('.video-container');
-    const fsBtn = document.querySelector('.video-fs-btn');
-
-    function toggleFullscreen() {
-        if (!document.fullscreenElement) {
-            if (container.requestFullscreen) {
-                container.requestFullscreen();
-            } else if (container.webkitRequestFullscreen) { // Safari
-                container.webkitRequestFullscreen();
-            } else if (container.mozRequestFullScreen) { // Old Firefox
-                container.mozRequestFullScreen();
-            } else if (container.msRequestFullscreen) { // Old IE/Edge
-                container.msRequestFullscreen();
-            }
-        } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            } else if (document.mozCancelFullScreen) {
-                document.mozCancelFullScreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            }
-        }
-    }
-
-    fsBtn.addEventListener('click', toggleFullscreen);
-
-    document.addEventListener('fullscreenchange', () => {
-        if (document.fullscreenElement === container) {
-            fsBtn.textContent = 'Выйти из полноэкрана';
-        } else {
-            fsBtn.textContent = 'На весь экран';
-        }
-    });
-});
-</script>
 </body>
 </html>
